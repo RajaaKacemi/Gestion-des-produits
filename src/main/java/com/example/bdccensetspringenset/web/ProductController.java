@@ -43,6 +43,6 @@ public class ProductController {
     public String saveProduct(@Valid Product product, BindingResult bindingResult, Model model) {
         if(bindingResult.hasErrors()) return "new-product";
         productRepository.save(product);
-        return "redirect:/index";
+        return "redirect:/admin/index";
     }
 }

@@ -35,16 +35,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .formLogin(Customizer.withDefaults())
+                .formLogin(fl->fl.loginPage("/login").permitAll())
+//                .csrf(csrf->csrf.disable())
                 .csrf(Customizer.withDefaults())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/", "/index", "/login", "/newProduct", "/saveProduct", "/delete", "/h2-console/**").permitAll()
-                        .requestMatchers("/public/**").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .exceptionHandling(eh -> eh.accessDeniedPage("/notAuthorized"))
+                .authorizeHttpRequests((ar-> ar.requestMatchers("/user/**").hasRole("USER")))
+                .authorizeHttpRequests((ar-> ar.requestMatchers("/admin/**").hasRole("ADMIN")))
+                .authorizeHttpRequests((ar-> ar.requestMatchers("/public/**").permitAll()))
+                .authorizeHttpRequests(ar->ar.anyRequest().authenticated())
+                .exceptionHandling(eh-> eh.accessDeniedPage("/notAuthorized"))
                 .build();
     }
 
